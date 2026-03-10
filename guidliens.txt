@@ -9,3 +9,256 @@ Keep components small and reusable (components/ui & components/layout).
 Use Tailwind + DaisyUI classes for rapid UI development.
 
 For forms, use React Hook Form (JS version; skip Zod if you want).
+
+Perfect — now that your local project and GitHub are synced, we can talk about **how your team can work on different branches and merge changes safely**. I’ll break it down step by step with examples for a **React frontend project like Reclaim.pk**.
+
+---
+
+# 1️⃣ Branching Strategy (Recommended for Small Teams)
+
+* **`main` branch** → Always stable, contains code that’s ready to deploy
+* **`dev` branch** → Optional; integration branch before merging to `main`
+* **Feature branches** → Each developer works on their own branch:
+
+```
+feature/login
+feature/lost-item-form
+feature/search
+feature/messaging
+```
+
+* Naming convention: `feature/<feature-name>` or `bugfix/<issue>`
+
+---
+
+# 2️⃣ Creating a Branch
+
+Each developer should **create their own branch from main**:
+
+```bash
+git checkout main       # make sure on main
+git pull                # sync latest main
+git checkout -b feature/login
+```
+
+* `-b` creates and switches to a new branch
+* Now any commits they make will stay on their branch
+
+---
+
+# 3️⃣ Working on the Branch
+
+1. Make changes locally in your branch
+2. Stage changes:
+
+```bash
+git add .
+```
+
+3. Commit with a message:
+
+```bash
+git commit -m "Add login form and API integration"
+```
+
+4. Push your branch to GitHub:
+
+```bash
+git push -u origin feature/login
+```
+
+* `-u` sets the upstream for easier future pushes
+
+---
+
+# 4️⃣ Creating a Pull Request (PR)
+
+1. Go to GitHub → Repository → **Pull Requests → New Pull Request**
+2. Select **base branch** = `main` (or `dev`)
+3. Select **compare branch** = your feature branch
+4. Create the PR, add reviewers (team members)
+5. Team reviews the code, suggests changes if needed
+
+---
+
+# 5️⃣ Merging a PR
+
+After approval:
+
+1. **Merge via GitHub UI** (recommended for beginners)
+
+   * Click **Merge pull request**
+   * Delete the feature branch on GitHub to keep it clean
+
+2. **Sync local main branch**:
+
+```bash
+git checkout main
+git pull origin main
+```
+
+* This pulls the merged changes into your local main branch
+
+---
+
+# 6️⃣ Handling Conflicts
+
+Sometimes Git cannot auto-merge:
+
+* Git will mark conflicted files in your branch
+* Open the file(s), look for:
+
+```text
+<<<<<<< HEAD
+your code
+=======
+remote code
+>>>>>>> branch-name
+```
+
+* Edit to resolve conflicts → remove `<<<<<<<`, `=======`, `>>>>>>>`
+* Stage and commit:
+
+```bash
+git add <file>
+git commit -m "Resolve merge conflict in <file>"
+```
+
+* Push changes if needed:
+
+```bash
+git push
+```
+
+---
+
+# 7️⃣ Recommended Workflow for Team
+
+1. **Sync before starting work**:
+
+```bash
+git checkout main
+git pull origin main
+git checkout -b feature/xyz
+```
+
+2. Work on feature → commit → push
+
+3. Open PR → review → merge
+
+4. Everyone keeps `main` up to date:
+
+```bash
+git checkout main
+git pull origin main
+```
+
+5. Delete old feature branches after merge
+
+---
+
+# 8️⃣ Visual Example
+
+```
+main
+ ├─ feature/login  (Alice)
+ │     └─ PR → merged into main
+ ├─ feature/lost-item-form (Bob)
+ │     └─ PR → conflicts resolved → merged
+ └─ feature/messaging (Charlie)
+       └─ PR → merged later
+```
+
+* Each developer works **independently**
+* PR ensures code is **reviewed and merged safely**
+* Git handles conflicts if changes overlap
+
+---
+
+Perfect! Here’s a **clear Git workflow diagram** for your team, showing how branches, commits, and merges work for your React frontend project:
+
+---
+
+## 🖇 Reclaim.pk Git Workflow Diagram
+
+```
+                  ┌─────────────┐
+                  │   main      │  ← Stable branch (ready to deploy)
+                  └─────┬───────┘
+                        │
+           ┌────────────┴─────────────┐
+           │                          │
+┌───────────────────┐        ┌────────────────────┐
+│ feature/login     │        │ feature/lost-item  │
+│ (Alice)           │        │ (Bob)              │
+│ ──commit──commit─>│        │──commit─commit──>  │
+└─────────────┬─────┘        └─────────────┬─────┘
+              │                           │
+              │ Pull Request / Review     │ Pull Request / Review
+              │                           │
+              ▼                           ▼
+       ┌─────────────┐             ┌─────────────┐
+       │   main      │ ← Merge PR  │   main      │ ← Merge PR
+       └─────────────┘             └─────────────┘
+              │
+              │ Pull latest changes before new features
+              ▼
+       ┌─────────────┐
+       │ feature/messaging │
+       │ (Charlie)        │
+       └─────────────┬───┘
+                     │
+          Pull Request / Review
+                     │
+                     ▼
+               ┌─────────────┐
+               │   main      │ ← Final merged code
+               └─────────────┘
+```
+
+---
+
+### ✅ Workflow Summary
+
+1. **Always branch from `main`** for new features:
+
+   ```bash
+   git checkout main
+   git pull origin main
+   git checkout -b feature/xyz
+   ```
+
+2. **Work on feature branch** → commit → push:
+
+   ```bash
+   git add .
+   git commit -m "Implement login form"
+   git push -u origin feature/login
+   ```
+
+3. **Open Pull Request (PR)** on GitHub → team review → merge to `main`.
+
+4. **Pull latest `main`** before starting a new feature:
+
+   ```bash
+   git checkout main
+   git pull origin main
+   ```
+
+5. **Resolve conflicts** if Git flags overlapping changes.
+
+6. **Delete feature branches** after merge to keep repo clean.
+
+---
+
+This workflow keeps:
+
+* `main` **always stable**
+* Each developer working **independently**
+* Merges safe, with PR review and conflict resolution
+
+---
+
+If you want, I can also make a **simplified text diagram specifically for your team** showing **Login, Lost Item, Found Item, Messaging branches** with clear PR flow — this will be like a **visual team guide** you can share.
+
+Do you want me to do that?
