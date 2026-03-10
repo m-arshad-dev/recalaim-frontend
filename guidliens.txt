@@ -1,0 +1,11 @@
+Use feature-based structure: features/auth, features/lostItems, etc.
+
+All API calls go through services/apiClient.js.
+
+All global state (auth, notifications) in store/.
+
+Keep components small and reusable (components/ui & components/layout).
+
+Use Tailwind + DaisyUI classes for rapid UI development.
+
+For forms, use React Hook Form (JS version; skip Zod if you want).
