@@ -255,10 +255,4 @@ This workflow keeps:
 
 * `main` **always stable**
 * Each developer working **independently**
-* Merges safe, with PR review and conflict resolution
-
----
-
-If you want, I can also make a **simplified text diagram specifically for your team** showing **Login, Lost Item, Found Item, Messaging branches** with clear PR flow — this will be like a **visual team guide** you can share.
-
-Do you want me to do that?
+* Merges safe, with PR review and conflict resolutio

@@ -2,9 +2,12 @@ import { useState } from "react";
 import { useAuthStore } from "../../store/authStore";
 import { useNavigate } from "react-router-dom";
 import apiClient from "../../services/apiClient";
+import { loginUser } from "./authApi";
+
+
 
 export default function Login() {
-  const [phone, setPhone] = useState("");
+  const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const { login } = useAuthStore();
   const navigate = useNavigate();
@@ -12,8 +15,9 @@ export default function Login() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const res = await apiClient.post("/auth/login", { phone, password });
-      login(res.data.user, res.data.token);
+      const data = await loginUser(email , password)
+      login(data.user, data.token);
+      localStorage.setItem("token" , data.token)
       navigate("/dashboard");
     } catch (err) {
       console.error(err);
@@ -27,9 +31,9 @@ export default function Login() {
         <h2 className="text-xl font-bold">Login</h2>
         <input
           type="text"
-          placeholder="Phone"
-          value={phone}
-          onChange={(e) => setPhone(e.target.value)}
+          placeholder="Email"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
           className="input input-bordered w-full"
         />
         <input
