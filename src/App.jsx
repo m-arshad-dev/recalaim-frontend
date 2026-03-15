@@ -7,8 +7,9 @@ import Search from "./pages/Search";
 import ItemDetails from "./pages/ItemDetails";
 
 function App() {
-  return (
-    <Router>
+  return <Dashboard />
+    
+    {/*<Router>
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/login" element={<Login />} />
@@ -17,8 +18,8 @@ function App() {
         <Route path="/search" element={<Search />} />
         <Route path="/item/:id" element={<ItemDetails />} />
       </Routes>
-    </Router>
-  );
+    </Router>*/}
+  ;
 }
 
 export default App;
