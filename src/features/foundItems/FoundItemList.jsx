@@ -1,12 +1,12 @@
 import { useEffect, useState } from "react";
-import { getLostItems } from "./lostItemsAPI";
+import { getFoundItems } from "./lostItemsAPI";
 
-export default function LostItemList() {
+export default function FoundItemList() {
   const [items, setItems] = useState([]);
 
   useEffect(() => {
     const fetchItems = async () => {
-      const data = await getLostItems();
+      const data = await getFoundItems();
       setItems(data);
     };
     fetchItems();
