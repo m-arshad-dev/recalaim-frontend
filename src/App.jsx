@@ -1,5 +1,5 @@
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-//import Home from "./pages/Home";
+import Home from "./pages/Home";
 import Dashboard from "./pages/Dashboard";
 //import Login from "./features/auth/Login";
 //import Signup from "./features/auth/Signup";
@@ -12,7 +12,8 @@ function App() {
       <Routes>
        
         <Route path="/dashboard" element={<Dashboard />} />
-       
+        <Route path="/home" element={<Home/>}/>
+        
       </Routes>
     </Router>
   );
