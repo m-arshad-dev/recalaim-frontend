@@ -1,24 +1,101 @@
-// src/features/lostItems/pages/ReportLostItemPage.jsx
-import React from 'react';
-import { TopAppBar } from '../components/TopAppBar';
+import React from "react";
+import useReportItemForm from "../features/lostItems/ReportItemForm";
 
-export const ReportLostItemPage = () => {
+const ReportLostItemPage = () => {
+  const {
+    formData,
+    handleChange,
+    handleImageChange,
+    handleSubmit,
+    handleCancel,
+  } = useReportItemForm("lost");
+
   return (
-    <div className="flex flex-col h-[844px] w-[390px] mx-auto overflow-x-hidden bg-surface-container-low font-body text-on-surface antialiased">
-      <TopAppBar title="Lost & Found" showBackButton />
-      <main className="flex-1 px-6 pt-8 pb-8 space-y-10 overflow-y-auto hide-scrollbar">
-        {/* Editorial Header Section */}
-        <section className="space-y-2">
-          <h2 className="font-headline font-extrabold text-3xl text-on-surface leading-tight">
-            Report a <span className="text-primary italic">Lost Item</span>
-          </h2>
-          <p className="text-on-surface-variant text-sm max-w-[85%]">
-            Fill in the details below. Our community concierge will help you reconnect with your belongings.
-          </p>
-        </section>
+    <div className="min-h-screen bg-gray-100 flex items-center justify-center">
+      <form
+        onSubmit={handleSubmit}
+        className="bg-white shadow-lg rounded-2xl p-8 w-full max-w-lg"
+      >
+        <h2 className="text-2xl font-bold mb-6 text-center">
+          Report Lost Item
+        </h2>
 
-        <ReportItemForm />
-      </main>
+        <input
+          type="text"
+          name="user_id"
+          placeholder="User ID"
+          value={formData.user_id}
+          onChange={handleChange}
+          className="w-full mb-4 p-3 border rounded-lg"
+          required
+        />
+
+        <input
+          type="text"
+          name="category_id"
+          placeholder="Category ID"
+          value={formData.category_id}
+          onChange={handleChange}
+          className="w-full mb-4 p-3 border rounded-lg"
+          required
+        />
+
+        <input
+          type="text"
+          name="location_id"
+          placeholder="Location ID"
+          value={formData.location_id}
+          onChange={handleChange}
+          className="w-full mb-4 p-3 border rounded-lg"
+          required
+        />
+
+        <input
+          type="text"
+          name="title"
+          placeholder="Item Title"
+          value={formData.title}
+          onChange={handleChange}
+          className="w-full mb-4 p-3 border rounded-lg"
+          required
+        />
+
+        <textarea
+          name="description"
+          placeholder="Description"
+          value={formData.description}
+          onChange={handleChange}
+          className="w-full mb-4 p-3 border rounded-lg"
+          required
+        />
+
+        <input
+          type="file"
+          accept="image/*"
+          onChange={handleImageChange}
+          className="w-full mb-4"
+          required
+        />
+
+        <div className="flex justify-between mt-6">
+          <button
+            type="button"
+            onClick={handleCancel}
+            className="bg-gray-400 text-white px-6 py-2 rounded-lg"
+          >
+            Cancel
+          </button>
+
+          <button
+            type="submit"
+            className="bg-blue-600 text-white px-6 py-2 rounded-lg"
+          >
+            Submit
+          </button>
+        </div>
+      </form>
     </div>
   );
 };
+
+export default ReportLostItemPage;

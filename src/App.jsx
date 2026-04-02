@@ -6,7 +6,8 @@ import Dashboard from "./pages/Dashboard";
 import Search from "./pages/Search";
 import ItemDetails from "./pages/ItemDetails";
 import ClaimItem from "./pages/ClaimItem";
-
+import ReportLostItemPage from "./pages/ReportLostItemPage";
+import ReportFoundtItemPage from "./pages/ReportFoundItemPage";
 function App() {
   return (
     <Router>
@@ -19,7 +20,9 @@ function App() {
         <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/search" element={<Search />} />
         <Route path="/item/:id" element={<ItemDetails />} />
-        <Route path="/claim/:itemId" element={<ClaimItem />} />
+        <Route path="/claim/:itemId" element={<ClaimItem />}/>
+        <Route path="/lost" element={<ReportLostItemPage />} />
+         <Route path="/found" element={<ReportFoundtItemPage />} />
       </Routes>
     </Router>
   );

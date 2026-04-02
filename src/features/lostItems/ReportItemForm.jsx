@@ -1,38 +1,98 @@
-// src/features/lostItems/components/ReportItemForm.jsx
-import React, { useState } from 'react';
-import { PhotoUploadSection } from './PhotoUploadSection';
-import { ItemDetailsForm } from './ItemDetailsForm';
-import { FormActions } from './FormActions';
+import { useState } from "react";
+import { addItem } from "../../services/lostfoundservice";
 
-export const ReportItemForm = () => {
+const useReportItemForm = (type = "lost") => {
   const [formData, setFormData] = useState({
-    title: '',
-    category: 'Electronics',
-    location: 'Brooklyn',
-    lostDate: '',
-    description: '',
+    user_id: "",
+    category_id: "",
+    location_id: "",
+    title: "",
+    description: "",
+    image_url: "",
+    status: type,
   });
 
+  const [imageFile, setImageFile] = useState(null);
+
+  // Handle input
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setFormData(prev => ({ ...prev, [name]: value }));
+    setFormData((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
   };
 
-  const handleSubmit = () => {
-    console.log('Form submitted:', formData);
-    // Handle form submission logic here
+  // Handle image
+  const handleImageChange = (e) => {
+    const file = e.target.files[0];
+    setImageFile(file);
+
+    if (file) {
+      setFormData((prev) => ({
+        ...prev,
+        image_url: file.name,
+      }));
+    }
+  };
+
+  // Submit
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    for (let key in formData) {
+      if (!formData[key]) {
+        alert("All fields are required!");
+        return;
+      }
+    }
+
+    try {
+      const res = await addItem(formData, type);
+      console.log("Success:", res.data);
+      alert("Item submitted successfully!");
+
+      // Reset
+      setFormData({
+        user_id: "",
+        category_id: "",
+        location_id: "",
+        title: "",
+        description: "",
+        image_url: "",
+        status: type,
+      });
+
+      setImageFile(null);
+
+    } catch (err) {
+      console.log("Error:", err.response?.data || err.message);
+      alert("Error submitting form");
+    }
   };
 
   const handleCancel = () => {
-    // Handle cancel logic (e.g., navigate back)
-    console.log('Form cancelled');
+    setFormData({
+      user_id: "",
+      category_id: "",
+      location_id: "",
+      title: "",
+      description: "",
+      image_url: "",
+      status: type,
+    });
+    setImageFile(null);
   };
 
-  return (
-    <form className="space-y-8" onSubmit={(e) => e.preventDefault()}>
-      <PhotoUploadSection />
-      <ItemDetailsForm formData={formData} onChange={handleChange} />
-      <FormActions onSubmit={handleSubmit} onCancel={handleCancel} />
-    </form>
-  );
+  // 🔥 Return everything to page
+  return {
+    formData,
+    imageFile,
+    handleChange,
+    handleImageChange,
+    handleSubmit,
+    handleCancel,
+  };
 };
+
+export default useReportItemForm;
