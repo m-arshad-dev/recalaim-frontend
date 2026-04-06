@@ -8,13 +8,12 @@ const useReportItemForm = (type = "lost") => {
     location_id: "",
     title: "",
     description: "",
-    image_url: "",
     status: type,
   });
 
   const [imageFile, setImageFile] = useState(null);
 
-  // Handle input
+  // ✅ Fix typing issue
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData((prev) => ({
@@ -23,23 +22,19 @@ const useReportItemForm = (type = "lost") => {
     }));
   };
 
-  // Handle image
+  // ✅ Store real file
   const handleImageChange = (e) => {
     const file = e.target.files[0];
-    setImageFile(file);
-
     if (file) {
-      setFormData((prev) => ({
-        ...prev,
-        image_url: file.name,
-      }));
+      setImageFile(file);
     }
   };
 
-  // Submit
+  // ✅ Submit with FormData
   const handleSubmit = async (e) => {
     e.preventDefault();
 
+    // Validation
     for (let key in formData) {
       if (!formData[key]) {
         alert("All fields are required!");
@@ -47,8 +42,26 @@ const useReportItemForm = (type = "lost") => {
       }
     }
 
+    if (!imageFile) {
+      alert("Image is required!");
+      return;
+    }
+
     try {
-      const res = await addItem(formData, type);
+      const data = new FormData();
+
+      // Append text fields
+      for (let key in formData) {
+        data.append(key, formData[key]);
+      }
+
+      // Append image file
+      data.append("image", imageFile);
+
+      console.log("Sending FormData...");
+
+      const res = await addItem(data, type);
+
       console.log("Success:", res.data);
       alert("Item submitted successfully!");
 
@@ -59,7 +72,6 @@ const useReportItemForm = (type = "lost") => {
         location_id: "",
         title: "",
         description: "",
-        image_url: "",
         status: type,
       });
 
@@ -78,16 +90,13 @@ const useReportItemForm = (type = "lost") => {
       location_id: "",
       title: "",
       description: "",
-      image_url: "",
       status: type,
     });
     setImageFile(null);
   };
 
-  // 🔥 Return everything to page
   return {
     formData,
-    imageFile,
     handleChange,
     handleImageChange,
     handleSubmit,
