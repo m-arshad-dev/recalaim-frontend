@@ -9,12 +9,13 @@ import ForgotPassword from "./features/auth/ForgotPassword";
 import ResetPassword from "./features/auth/ResetPassword";
 import Profile from "./features/auth/Profile";
 import EditProfile from "./features/auth/EditProfile";
-
+import Founditem from "./features/foundItem/Founditem"
 // Dashboard Components
 import DashboardHome from "./features/dashboard/DashboardHome";
 import LostItems from "./features/dashboard/LostItems";
 import FoundItems from "./features/dashboard/FoundItems";
 import Claims from "./features/dashboard/Claims";
+
 
 function App() {
   return (
@@ -27,7 +28,7 @@ function App() {
         <Route path="/verify-email" element={<VerifyEmail />} />
         <Route path="/forgot-password" element={<ForgotPassword />} />
         <Route path="/reset-password" element={<ResetPassword />} />
-
+        <Route path="found-item" element={<Founditem/>}/>
         {/* Protected */}
         <Route path="/profile" element={<ProtectedRoute><Profile /></ProtectedRoute>} />
         <Route path="/edit-profile" element={<ProtectedRoute><EditProfile /></ProtectedRoute>} />
