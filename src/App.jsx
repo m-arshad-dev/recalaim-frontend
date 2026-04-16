@@ -16,6 +16,13 @@ import LostItems from "./features/dashboard/LostItems";
 import FoundItems from "./features/dashboard/FoundItems";
 import Claims from "./features/dashboard/Claims";
 
+import Home from "./pages/Home";
+import Dashboard from "./pages/Dashboard";
+// import Login from "./features/auth/Login";
+// import Signup from "./features/auth/Signup";
+import Search from "./pages/Search";
+import ItemDetails from "./pages/ItemDetails";
+import ClaimItem from "./pages/ClaimItem";
 
 function App() {
   return (
@@ -37,6 +44,15 @@ function App() {
         <Route path="/dashboard/lost-items" element={<ProtectedRoute><LostItems /></ProtectedRoute>} />
         <Route path="/dashboard/found-items" element={<ProtectedRoute><FoundItems /></ProtectedRoute>} />
         <Route path="/dashboard/claims" element={<ProtectedRoute><Claims /></ProtectedRoute>} />
+        <Route path="/" element={<Home />} />
+
+        {/* <Route path="/login" element={<Login />} /> */}
+        {/* <Route path="/signup" element={<Signup />} /> */}
+
+        <Route path="/dashboard" element={<Dashboard />} />
+        <Route path="/search" element={<Search />} />
+        <Route path="/item/:id" element={<ItemDetails />} />
+        <Route path="/claim/:itemId" element={<ClaimItem />} />
       </Routes>
     </Router>
   );
