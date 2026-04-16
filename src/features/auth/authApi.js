@@ -1,9 +1,9 @@
 import apiClient from "../../services/apiClient";
 
 // Signup
-export const signupUser = async (full_name, email, password) => {
-  const res = await apiClient.post("/users/register", { full_name, email, password });
-  console.log("from hte signup authapi" , res)
+export const signupUser = async (data) => {
+  const res = await apiClient.post("/users/register", data);
+  console.log(res)
   return res.data;
 };
 
@@ -29,6 +29,13 @@ export const refreshToken = async (refreshToken) => {
 export const getProfile = async () => {
   const res = await apiClient.get("/users/me");
   return res.data;
+};
+
+
+// Get recent activity for the logged-in user
+export const getActivity = async () => {
+  const res = await apiClient.get("/users/me/activity");
+  return res.data; // { success: true, data: { recent_items, recent_claims } }
 };
 
 export const updateProfile = async (userData) => {

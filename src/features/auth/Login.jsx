@@ -1,107 +1,4 @@
-// import { useState } from "react";
-// import { useNavigate } from "react-router-dom";
-// import { useAuthStore } from "../../store/authStore";
-// import { loginUser, getProfile } from "./authApi";
-// // import loginHero from "/mnt/data/a_digital_illustration_showcases_a_login_screen_fo.png"; // your uploaded image path
 
-// export default function Login() {
-//   const [email, setEmail] = useState("");
-//   const [password, setPassword] = useState("");
-//   const navigate = useNavigate();
-//   const { login } = useAuthStore();
-
-//   const handleSubmit = async (e) => {
-//     e.preventDefault();
-//     try {
-//       const { accessToken } = await loginUser(email, password);
-//       localStorage.setItem("token", accessToken);
-//       const user = await getProfile();
-//       login(user, accessToken);
-//       navigate("/dashboard");
-//     } catch (err) {
-//       console.error(err);
-//       alert("Login failed: Invalid credentials");
-//     }
-//   };
-
-//   return (
-//     <div className="min-h-screen flex flex-col items-center justify-center bg-gray-100 p-4">
-//       {/* Header / Logo */}
-//       <header className="text-center mb-6">
-//         {/* <img src={loginHero} alt="Reclaim.PK Login" className="mx-auto w-48 h-auto mb-4 rounded" /> */}
-//         <h1 className="text-3xl font-bold text-blue-700">Reclaim.PK</h1>
-//         <p className="text-gray-600">Centralized Lost & Found Platform for Pakistan</p>
-//       </header>
-
-//       {/* Login Form */}
-//       <form
-//         onSubmit={handleSubmit}
-//         className="w-full max-w-md bg-white rounded-lg shadow-md p-6"
-//       >
-//         <h2 className="text-xl font-semibold mb-4 text-gray-800">Login to Your Account</h2>
-//         <p className="text-gray-500 mb-4">Enter your email and password to continue.</p>
-
-//         <div className="mb-3">
-//           <input
-//             type="email"
-//             placeholder="Email"
-//             value={email}
-//             onChange={(e) => setEmail(e.target.value)}
-//             required
-//             className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-400"
-//           />
-//         </div>
-
-//         <div className="mb-3">
-//           <input
-//             type="password"
-//             placeholder="Password"
-//             value={password}
-//             onChange={(e) => setPassword(e.target.value)}
-//             required
-//             className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-400"
-//           />
-//         </div>
-
-//         <div className="flex justify-end mb-4">
-//           <a href="/forgot-password" className="text-blue-600 hover:underline text-sm">
-//             Forgot Password?
-//           </a>
-//         </div>
-
-//         <button
-//           type="submit"
-//           className="w-full bg-orange-500 hover:bg-orange-600 text-white py-3 rounded-lg font-semibold transition"
-//         >
-//           Login
-//         </button>
-
-//         <p className="text-center mt-4 text-gray-600">
-//           New to Reclaim.PK?{" "}
-//           <a href="/signup" className="text-green-600 hover:underline font-medium">
-//             Sign Up
-//           </a>
-//         </p>
-//       </form>
-
-//       {/* Footer Trust Icons */}
-//       <footer className="mt-6 flex flex-col sm:flex-row justify-center gap-6 text-center text-gray-600 text-sm">
-//         <div className="flex flex-col items-center">
-//           <span className="text-green-600 font-bold">✔</span>
-//           Secure & Safe
-//         </div>
-//         <div className="flex flex-col items-center">
-//           <span className="text-green-600 font-bold">✔</span>
-//           Verified Accounts
-//         </div>
-//         <div className="flex flex-col items-center">
-//           <span className="text-blue-600 font-bold">🔍</span>
-//           24/7 Moderation
-//         </div>
-//       </footer>
-//     </div>
-//   );
-// }
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuthStore } from "../../store/authStore";
@@ -120,11 +17,14 @@ export default function Login() {
     setLoading(true);
 
     try {
-      const { accessToken } = await loginUser(email, password);
-      localStorage.setItem("token", accessToken);
+      const response = await loginUser(email, password);
 
-      const user = await getProfile();
-      login(user, accessToken);
+    const { accessToken, refreshToken, user } = response;
+
+    localStorage.setItem("token", accessToken);
+    localStorage.setItem("refreshToken", refreshToken); // optional if you store it
+
+    login(user, accessToken); // keep your auth store updated
 
       navigate("/dashboard");
     } catch (err) {

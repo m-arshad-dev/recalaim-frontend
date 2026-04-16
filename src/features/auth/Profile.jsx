@@ -1,35 +1,4 @@
-// import { useEffect, useState } from "react";
-// import { getProfile } from "./authApi";
 
-// export default function Profile() {
-//   const [user, setUser] = useState(null);
-
-//   useEffect(() => {
-//     const fetchProfile = async () => {
-//       const data = await getProfile();
-//       setUser(data);
-//     };
-//     fetchProfile();
-//   }, []);
-
-//   if (!user) return <p>Loading...</p>;
-
-//   return (
-//     <div className="max-w-md mx-auto p-6 bg-white rounded shadow-md">
-//       <h2 className="text-xl font-bold mb-4">Profile</h2>
-//       <p><strong>Name:</strong> {user.full_name}</p>
-//       <p><strong>Email:</strong> {user.email}</p>
-//       <p>
-//         <strong>Status:</strong>{" "}
-//         {user.is_verified ? (
-//           <span className="badge badge-success">Verified</span>
-//         ) : (
-//           <span className="badge badge-warning">Not Verified</span>
-//         )}
-//       </p>
-//     </div>
-//   );
-// }
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { getProfile } from "./authApi";

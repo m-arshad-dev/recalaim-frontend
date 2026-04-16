@@ -1,58 +1,3 @@
-// import { useState } from "react";
-// import { useNavigate } from "react-router-dom";
-// import { signupUser } from "./authApi";
-
-// export default function Signup() {
-//   const [fullName, setFullName] = useState("");
-//   const [email, setEmail] = useState("");
-//   const [password, setPassword] = useState("");
-//   const navigate = useNavigate();
-
-//   const handleSubmit = async (e) => {
-//     e.preventDefault();
-//     try {
-//       const data = await signupUser(fullName, email, password);
-//       alert("Signup successful! Please verify your email.");
-//       navigate("/verify-email");
-//     } catch (err) {
-//   console.error(err);
-//   if (err.response?.data?.errors) {
-//     alert("Signup failed: " + err.response.data.errors.map(e => e.msg).join(", "));
-//   } else {
-//     alert("Signup failed: " + (err.response?.data?.message || err.message));
-//   }
-// }
-//   };
-
-//   return (
-//     <form onSubmit={handleSubmit} className="max-w-md mx-auto p-6 bg-white rounded shadow-md">
-//       <h2 className="text-xl font-bold mb-4">Sign Up</h2>
-//       <input
-//         type="text"
-//         placeholder="Full Name"
-//         value={fullName}
-//         onChange={(e) => setFullName(e.target.value)}
-//         className="input input-bordered w-full mb-2"
-//       />
-//       <input
-//         type="email"
-//         placeholder="Email"
-//         value={email}
-//         onChange={(e) => setEmail(e.target.value)}
-//         className="input input-bordered w-full mb-2"
-//       />
-//       <input
-//         type="password"
-//         placeholder="Password"
-//         value={password}
-//         onChange={(e) => setPassword(e.target.value)}
-//         className="input input-bordered w-full mb-2"
-//       />
-//       <button type="submit" className="btn btn-primary w-full">Sign Up</button>
-//     </form>
-//   );
-// }
-
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { signupUser } from "./authApi";
@@ -60,108 +5,176 @@ import { signupUser } from "./authApi";
 export default function Signup() {
   const [fullName, setFullName] = useState("");
   const [email, setEmail] = useState("");
+  const [phoneNumber, setPhoneNumber] = useState("");
   const [password, setPassword] = useState("");
+
   const [loading, setLoading] = useState(false);
+  const [errors, setErrors] = useState({});
+  const [showPassword, setShowPassword] = useState(false);
 
   const navigate = useNavigate();
 
+  // Password strength
+  const getPasswordStrength = () => {
+    if (password.length < 6) return "weak";
+    if (password.length < 10) return "medium";
+    return "strong";
+  };
+
+  const validateForm = () => {
+    const newErrors = {};
+
+    if (!fullName.trim()) newErrors.fullName = "Full name is required";
+    if (!email.trim()) newErrors.email = "Email is required";
+    if (password.length < 8)
+      newErrors.password = "Password must be at least 8 characters";
+
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    if (!validateForm()) return;
+
     setLoading(true);
 
     try {
-      await signupUser(fullName, email, password);
-      alert("Signup successful! Please verify your email.");
+      console.log({
+        full_name: fullName,
+        email,
+        password,
+        phone_number: phoneNumber || null
+      })
+      await signupUser({
+        full_name: fullName,
+        email,
+        password,
+        phone_number: phoneNumber || null
+      });
+
+
       navigate("/verify-email");
     } catch (err) {
-      console.error(err);
-
       if (err.response?.data?.errors) {
-        alert(
-          "Signup failed: " +
-            err.response.data.errors.map((e) => e.msg).join(", ")
-        );
+        const backendErrors = {};
+        err.response.data.errors.forEach((e) => {
+          backendErrors[e.param] = e.msg;
+        });
+        setErrors(backendErrors);
       } else {
-        alert("Signup failed: " + (err.response?.data?.message || err.message));
+        setErrors({ general: err.response?.data?.message || "Signup failed" });
       }
     }
 
     setLoading(false);
   };
 
+  const strength = getPasswordStrength();
+
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-100 px-4">
       <form
         onSubmit={handleSubmit}
         className="w-full max-w-md bg-white p-8 rounded-2xl shadow-lg space-y-6"
-        aria-labelledby="signup-heading"
       >
         {/* Title */}
         <div className="text-center">
-          <h2 id="signup-heading" className="text-2xl font-bold text-gray-800">
-            Create an Account
-          </h2>
+          <h2 className="text-2xl font-bold text-gray-800">Create an Account</h2>
           <p className="text-gray-500 text-sm mt-1">
-            Sign up to get started with your account
+            Sign up to get started
           </p>
         </div>
 
+        {/* General Error */}
+        {errors.general && (
+          <p className="text-red-500 text-sm text-center">{errors.general}</p>
+        )}
+
         {/* Full Name */}
         <div className="space-y-1">
-          <label htmlFor="fullName" className="text-sm font-medium text-gray-700">
-            Full Name
-          </label>
+          <label className="text-sm font-medium text-gray-700">Full Name</label>
           <input
-            id="fullName"
             type="text"
-            placeholder="John Doe"
             value={fullName}
             onChange={(e) => setFullName(e.target.value)}
-            required
-            aria-required="true"
-            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none transition"
+            className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none"
           />
+          {errors.fullName && (
+            <p className="text-red-500 text-xs">{errors.fullName}</p>
+          )}
         </div>
 
         {/* Email */}
         <div className="space-y-1">
-          <label htmlFor="email" className="text-sm font-medium text-gray-700">
-            Email Address
-          </label>
+          <label className="text-sm font-medium text-gray-700">Email</label>
           <input
-            id="email"
             type="email"
-            placeholder="example@email.com"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
-            required
-            aria-required="true"
-            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none transition"
+            className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none"
+          />
+          {errors.email && (
+            <p className="text-red-500 text-xs">{errors.email}</p>
+          )}
+        </div>
+
+        {/* Phone (Optional) */}
+        <div className="space-y-1">
+          <label className="text-sm font-medium text-gray-700">
+            Phone Number (optional)
+          </label>
+          <input
+            type="tel"
+            value={phoneNumber}
+            onChange={(e) => setPhoneNumber(e.target.value)}
+            className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none"
           />
         </div>
 
         {/* Password */}
         <div className="space-y-1">
-          <label htmlFor="password" className="text-sm font-medium text-gray-700">
-            Password
-          </label>
-          <input
-            id="password"
-            type="password"
-            placeholder="Enter a strong password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            required
-            aria-required="true"
-            minLength={6}
-            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none transition"
-          />
-          <p className="text-xs text-gray-500">
-            Password must be at least 6 characters
-          </p>
+          <label className="text-sm font-medium text-gray-700">Password</label>
+
+          <div className="relative">
+            <input
+              type={showPassword ? "text" : "password"}
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none"
+            />
+
+            <button
+              type="button"
+              onClick={() => setShowPassword(!showPassword)}
+              className="absolute right-3 top-2 text-sm text-gray-500"
+            >
+              {showPassword ? "Hide" : "Show"}
+            </button>
+          </div>
+
+          {errors.password && (
+            <p className="text-red-500 text-xs">{errors.password}</p>
+          )}
+
+          {/* Password Strength Indicator */}
+          {password && (
+            <p
+              className={`text-xs ${
+                strength === "weak"
+                  ? "text-red-500"
+                  : strength === "medium"
+                  ? "text-yellow-500"
+                  : "text-green-600"
+              }`}
+            >
+              Password strength: {strength}
+            </p>
+          )}
         </div>
 
-        {/* Submit Button */}
+        {/* Button */}
         <button
           type="submit"
           disabled={loading}
@@ -170,7 +183,7 @@ export default function Signup() {
           {loading ? "Creating Account..." : "Sign Up"}
         </button>
 
-        {/* Footer Text */}
+        {/* Footer */}
         <p className="text-center text-sm text-gray-500">
           Already have an account?{" "}
           <span
